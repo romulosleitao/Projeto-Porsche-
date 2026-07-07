@@ -4,6 +4,7 @@ Este projeto tem como objetivo central a análise e visualização de dados de v
 🛠️ Arquitetura do Projeto
 A estrutura de diretórios foi organizada para separar a lógica de processamento de dados da interface do usuário:
 
+
 📁 Projeto_Porsche/
 ├── 📁 Data/
 │   └── kpis_dashboard.json
@@ -12,9 +13,9 @@ A estrutura de diretórios foi organizada para separar a lógica de processament
 │   └── schema.md
 ├── 📁 scr/
 │   ├── Porsche Sales Sanitization Agent.py
-│   ├── Transformar_xlsl_em_Json.py
 │   ├── porsche_database.xlsx
-│   └── porsche_database_sanitized.xlsx
+│   ├── porsche_database_sanitized.xlsx
+│   └── Transformar_xlsl_em_Json.py
 └── index.html
 
 Data/
