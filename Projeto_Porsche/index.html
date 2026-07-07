@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Análise de Dados Sobre Vendas Porsche</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+:root{
+
+--bg:#ffffff;
+--bg-dark:#0f0f0f;
+
+--text:#111111;
+--text-dark:#ffffff;
+
+--yellow:#FFC857;
+--orange:#FF8A3D;
+--red:#E63946;
+
+--max-width:1600px;
+
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+
+font-family:'Inter',sans-serif;
+
+background:#fff;
+
+color:#111;
+
+overflow-x:hidden;
+
+transition:
+background-color .3s linear,
+color .3s linear;
+
+}
+
+.container{
+
+width:100%;
+max-width:var(--max-width);
+
+margin:0 auto;
+
+padding-left:7vw;
+padding-right:7vw;
+
+}
+
+section{
+
+position:relative;
+width:100%;
+
+}
+
+.hero{
+
+min-height:100vh;
+
+display:flex;
+
+align-items:center;
+
+}
+
+.hero-content{
+
+max-width:900px;
+
+}
+
+.hero-title{
+
+font-family:'Space Grotesk',sans-serif;
+
+font-size:clamp(4rem,8vw,8rem);
+
+line-height:.9;
+
+letter-spacing:-0.08em;
+
+text-transform:uppercase;
+
+font-weight:700;
+
+}
+
+.porsche{
+
+position:relative;
+
+display:inline-block;
+
+z-index:2;
+
+}
+
+.porsche::before{
+
+content:"PORSCHE";
+
+position:absolute;
+
+left:5px;
+
+top:0;
+
+color:#FFC857;
+
+z-index:-1;
+
+}
+
+.hero-description{
+
+margin-top:40px;
+
+font-size:1.15rem;
+
+line-height:1.8;
+
+max-width:650px;
+
+color:#444;
+
+}
+
+.hero-meta{
+
+margin-top:70px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:10px;
+
+font-size:.95rem;
+
+color:#666;
+
+}
+
+.transition-space{
+
+height:60vh;
+
+}
+
+.kpi-section{
+
+min-height:100vh;
+
+display:flex;
+
+align-items:center;
+
+}
+
+.kpi-value{
+
+font-family:'Space Grotesk',sans-serif;
+
+font-size:clamp(5rem,12vw,10rem);
+
+line-height:1;
+
+font-weight:700;
+
+}
+
+.kpi-label{
+
+margin-top:20px;
+
+font-size:1.2rem;
+
+opacity:.8;
+
+}
+
+.dashboard{
+
+padding-top:150px;
+padding-bottom:150px;
+
+}
+
+.section-title{
+
+font-family:'Space Grotesk',sans-serif;
+
+text-transform:uppercase;
+
+font-size:clamp(2.5rem,5vw,5rem);
+
+line-height:.95;
+
+margin-bottom:25px;
+
+}
+
+.section-description{
+
+max-width:700px;
+
+line-height:1.8;
+
+margin-bottom:80px;
+
+}
+
+.cards-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(4,minmax(200px,1fr));
+
+gap:25px;
+
+margin-bottom:80px;
+
+}
+
+.kpi-card{
+
+border-radius:22px;
+
+padding:30px;
+
+background:rgba(255,255,255,.04);
+
+border:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(10px);
+
+}
+
+.card-title{
+
+font-size:.9rem;
+
+opacity:.7;
+
+margin-bottom:15px;
+
+}
+
+.card-value{
+
+font-family:'Space Grotesk',sans-serif;
+
+font-size:2rem;
+
+font-weight:700;
+
+}
+
+.charts-grid{
+
+display:grid;
+
+grid-template-columns:
+repeat(2,minmax(350px,1fr));
+
+gap:30px;
+
+}
+
+.chart-card{
+
+border-radius:24px;
+
+padding:30px;
+
+min-height:450px;
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+.chart-title{
+
+font-family:'Space Grotesk',sans-serif;
+
+font-size:1.15rem;
+
+margin-bottom:25px;
+
+}
+
+canvas{
+
+width:100% !important;
+
+height:320px !important;
+
+}
+
+.explorer{
+
+padding-top:150px;
+padding-bottom:150px;
+
+}
+
+.explorer-grid{
+
+display:grid;
+
+grid-template-columns:300px 1fr;
+
+gap:40px;
+
+}
+
+.filter-box{
+
+padding:25px;
+
+border-radius:20px;
+
+border:1px solid rgba(255,255,255,.08);
+
+}
+
+.filter-box label{
+
+display:block;
+
+margin-bottom:10px;
+
+font-weight:600;
+
+}
+
+.filter-box select{
+
+width:100%;
+
+padding:15px;
+
+border-radius:12px;
+
+border:none;
+
+font-size:1rem;
+
+}
+
+.result-panel{
+
+padding:30px;
+
+border-radius:20px;
+
+border:1px solid rgba(255,255,255,.08);
+
+min-height:350px;
+
+}
+
+.footer{
+
+padding:150px 0;
+
+}
+
+.footer-list{
+
+margin-top:40px;
+
+line-height:2;
+
+}
+
+@media(max-width:1200px){
+
+.cards-grid{
+
+grid-template-columns:
+repeat(2,1fr);
+
+}
+
+.charts-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.hero-title{
+
+font-size:4rem;
+
+}
+
+.cards-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.explorer-grid{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+<!-- =====================================
+     HERO
+===================================== -->
+
+<section class="hero">
+
+    <div class="container">
+
+        <div class="hero-content">
+
+            <h1 class="hero-title">
+
+                ANÁLISE DE DADOS<br>
+                SOBRE VENDAS<br>
+                <span class="porsche">PORSCHE</span>
+
+            </h1>
+
+            <p class="hero-description">
+
+                Exploração estatística de vendas,
+                receita, logística, distribuição
+                geográfica e comportamento comercial.
+
+            </p>
+
+            <div class="hero-meta">
+
+                <span>100 registros analisados</span>
+                <span>21 variáveis observadas</span>
+                <span>Período: 2024–2027</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<div class="transition-space"></div>
+
+<!-- =====================================
+     KPI PRINCIPAL
+===================================== -->
+
+<section class="kpi-section">
+
+    <div class="container">
+
+        <div>
+
+            <div class="kpi-value" id="mainRevenue">
+
+                US$ 9,49M
+
+            </div>
+
+            <div class="kpi-label">
+
+                Receita Total
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     DASHBOARD EXECUTIVO
+===================================== -->
+
+<section class="dashboard">
+
+    <div class="container">
+
+        <h2 class="section-title">
+
+            Dashboard Executivo
+
+        </h2>
+
+        <p class="section-description">
+
+            Indicadores gerais de desempenho,
+            faturamento, comportamento comercial,
+            distribuição geográfica e eficiência operacional.
+
+        </p>
+
+        <div class="cards-grid">
+
+            <div class="kpi-card">
+
+                <div class="card-title">
+
+                    Receita Total
+
+                </div>
+
+                <div class="card-value"
+                     id="revenueCard">
+
+                    US$ 9,49M
+
+                </div>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <div class="card-title">
+
+                    Lucro Operacional
+
+                </div>
+
+                <div class="card-value"
+                     id="profitCard">
+
+                    US$ 1,71M
+
+                </div>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <div class="card-title">
+
+                    Unidades Vendidas
+
+                </div>
+
+                <div class="card-value"
+                     id="unitsCard">
+
+                    76
+
+                </div>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <div class="card-title">
+
+                    Ticket Médio
+
+                </div>
+
+                <div class="card-value"
+                     id="ticketCard">
+
+                    US$ 124,8k
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="charts-grid">
+
+            <div class="chart-card">
+
+                <div class="chart-title">
+
+                    Evolução da Receita
+
+                </div>
+
+                <canvas id="revenueChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <div class="chart-title">
+
+                    Modelos Mais Vendidos
+
+                </div>
+
+                <canvas id="modelsChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <div class="chart-title">
+
+                    Vendas por Estado (EUA)
+
+                </div>
+
+                <canvas id="statesChart"></canvas>
+
+            </div>
+
+            <div class="chart-card">
+
+                <div class="chart-title">
+
+                    Métodos de Pagamento
+
+                </div>
+
+                <canvas id="paymentChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<!-- =====================================
+     EXPLORADOR ANALÍTICO
+===================================== -->
+
+<section class="explorer">
+
+    <div class="container">
+
+        <h2 class="section-title">
+
+            Explorador Analítico
+
+        </h2>
+
+        <p class="section-description">
+
+            Escolha uma dimensão principal e compare
+            categorias, modelos, estados e indicadores
+            de forma dinâmica.
+
+        </p>
+
+        <div class="explorer-grid">
+
+            <div class="filter-box">
+
+                <label>
+
+                    Dimensão Principal
+
+                </label>
+
+                <select id="dimensionSelect">
+
+                    <option value="modelo">
+                        Modelo
+                    </option>
+
+                    <option value="estado">
+                        Estado
+                    </option>
+
+                    <option value="pagamento">
+                        Método de Pagamento
+                    </option>
+
+                    <option value="status">
+                        Status da Entrega
+                    </option>
+
+                </select>
+
+                <div
+                    id="dynamicFilters"
+                    style="
+                    margin-top:25px;
+                    display:flex;
+                    flex-direction:column;
+                    gap:10px;
+                ">
+                </div>
+
+            </div>
+
+            <div class="result-panel">
+
+                <h3
+                    style="
+                    font-family:'Space Grotesk';
+                    margin-bottom:25px;
+                    font-size:1.5rem;
+                ">
+
+                    Comparação
+
+                </h3>
+
+                <canvas
+                    id="comparisonChart"
+                    style="
+                    height:350px !important;
+                ">
+                </canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     CONCLUSÕES
+===================================== -->
+
+<section class="footer">
+
+    <div class="container">
+
+        <h2 class="section-title">
+
+            Principais Conclusões
+
+        </h2>
+
+        <p class="section-description">
+
+            Resumo executivo dos padrões
+            encontrados durante a análise.
+
+        </p>
+
+        <div class="footer-list">
+
+            <p>
+                • Modelos premium concentraram o maior faturamento.
+            </p>
+
+            <p>
+                • Texas e Califórnia lideraram o volume de vendas.
+            </p>
+
+            <p>
+                • O ticket médio permaneceu elevado durante todo o período.
+            </p>
+
+            <p>
+                • A maior parte das operações foi concluída com sucesso.
+            </p>
+
+            <p>
+                • O desempenho comercial variou significativamente entre os estados.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =====================================
+     INÍCIO DOS SCRIPTS
+===================================== -->
+
+<script>
+
+let dashboardData = null;
+
+let comparisonChart = null;
+
+const defaultData = {
+
+    kpis:{
+
+        faturamento_total:9490000,
+        lucro_operacional:1710000,
+        unidades_vendidas:76,
+        ticket_medio:124800
+
+    }
+
+};
+
+async function loadDashboardData(){
+
+    try{
+
+        const response =
+            await fetch(
+                './data/kpis_dashboard.json'
+            );
+
+        dashboardData =
+            await response.json();
+
+        console.log(
+            'JSON carregado:',
+            dashboardData
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            'Erro ao carregar JSON:',
+            error
+        );
+
+    }
+
+}
+
+function formatMoney(value){
+
+    return '$ ' +
+    (value / 1000000)
+    .toFixed(2)
+    + ' M';
+
+}
+
+function updateKPIs(){
+
+    const kpis =
+        dashboardData.kpis;
+
+    document
+        .getElementById('mainRevenue')
+        .innerHTML =
+        formatMoney(
+            kpis.faturamento_total
+        );
+
+    document
+        .getElementById('revenueCard')
+        .innerHTML =
+        formatMoney(
+            kpis.faturamento_total
+        );
+
+    document
+        .getElementById('profitCard')
+        .innerHTML =
+        formatMoney(
+            kpis.lucro_operacional
+        );
+
+    document
+        .getElementById('unitsCard')
+        .innerHTML =
+        kpis.unidades_vendidas;
+
+    document
+        .getElementById('ticketCard')
+        .innerHTML =
+        '$ ' +
+        (
+            kpis.ticket_medio / 1000
+        ).toFixed(1)
+        + 'k';
+
+}
+
+function createCharts(){
+
+    new Chart(
+
+        document.getElementById(
+            'revenueChart'
+        ),
+
+        {
+            type:'line',
+
+            data:{
+
+                labels:[
+                    'Jan',
+                    'Fev',
+                    'Mar',
+                    'Abr',
+                    'Mai',
+                    'Jun',
+                    'Jul',
+                    'Ago'
+                ],
+
+                datasets:[{
+
+                    data:[
+                        420,
+                        610,
+                        550,
+                        780,
+                        720,
+                        860,
+                        940,
+                        1100
+                    ],
+
+                    borderColor:'#FFC857',
+
+                    backgroundColor:'#FFC857',
+
+                    tension:.35
+
+                }]
+
+            },
+
+            options:{
+
+                responsive:true,
+
+                plugins:{
+
+                    legend:{
+                        display:false
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+    new Chart(
+
+        document.getElementById(
+            'modelsChart'
+        ),
+
+        {
+
+            type:'bar',
+
+            data:{
+
+                labels:[
+                    '911 Turbo',
+                    'Cayenne',
+                    'Panamera',
+                    'Macan',
+                    'Taycan'
+                ],
+
+                datasets:[{
+
+                    data:[
+                        18,
+                        14,
+                        12,
+                        10,
+                        8
+                    ],
+
+                    backgroundColor:[
+                        '#FFC857',
+                        '#FFB347',
+                        '#FF9A3D',
+                        '#FF7033',
+                        '#E63946'
+                    ]
+
+                }]
+
+            },
+
+            options:{
+
+                plugins:{
+
+                    legend:{
+                        display:false
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+    new Chart(
+
+        document.getElementById(
+            'statesChart'
+        ),
+
+        {
+
+            type:'bar',
+
+            data:{
+
+                labels:[
+                    'Texas',
+                    'California',
+                    'Florida',
+                    'Arizona',
+                    'New York'
+                ],
+
+                datasets:[{
+
+                    data:[
+                        20,
+                        18,
+                        12,
+                        8,
+                        6
+                    ],
+
+                    backgroundColor:'#FF8A3D'
+
+                }]
+
+            },
+
+            options:{
+
+                indexAxis:'y',
+
+                plugins:{
+
+                    legend:{
+                        display:false
+                    }
+
+                }
+
+            }
+
+        }
+
+    );
+
+    new Chart(
+
+        document.getElementById(
+            'paymentChart'
+        ),
+
+        {
+
+            type:'doughnut',
+
+            data:{
+
+                labels:[
+                    'Transferência',
+                    'Cartão',
+                    'Leasing',
+                    'Financiamento'
+                ],
+
+                datasets:[{
+
+                    data:[
+                        32,
+                        24,
+                        18,
+                        12
+                    ],
+
+                    backgroundColor:[
+                        '#FFC857',
+                        '#FFB347',
+                        '#FF8A3D',
+                        '#E63946'
+                    ]
+
+                }]
+
+            }
+
+        }
+
+    );
+
+}
+
+function populateExplorer() {
+
+    const dimension =
+        document.getElementById(
+            'dimensionSelect'
+        ).value;
+
+    const filters =
+        document.getElementById(
+            'dynamicFilters'
+        );
+
+    filters.innerHTML = '';
+
+    let data = {};
+
+    if (dimension === 'modelo') {
+
+        data =
+            dashboardData.graficos.mix_produtos;
+
+    }
+
+    if (dimension === 'estado') {
+
+        data =
+            dashboardData.graficos.mapa_estados;
+
+    }
+
+    if (dimension === 'pagamento') {
+
+        data =
+            dashboardData.graficos
+            .operacional
+            .metodos_pagamento;
+
+    }
+
+    if (dimension === 'status') {
+
+        data =
+            dashboardData.graficos
+            .operacional
+            .status_entrega;
+
+    }
+
+    Object.entries(data)
+        .forEach(([nome, valor]) => {
+
+            const label =
+                document.createElement(
+                    'label'
+                );
+
+            label.style.display = 'block';
+            label.style.marginBottom = '8px';
+
+            label.innerHTML = `
+                <input
+                    type="checkbox"
+                    checked
+                    value="${nome}"
+                >
+                ${nome}
+                (${valor})
+            `;
+
+            filters.appendChild(label);
+
+        });
+
+    updateComparisonChart();
+function updateComparisonChart() {
+
+    const dimension =
+        document.getElementById(
+            'dimensionSelect'
+        ).value;
+
+    let data = {};
+
+    if (dimension === 'modelo') {
+
+        data =
+            dashboardData.graficos.mix_produtos;
+
+    }
+
+    if (dimension === 'estado') {
+
+        data =
+            dashboardData.graficos.mapa_estados;
+
+    }
+
+    if (dimension === 'pagamento') {
+
+        data =
+            dashboardData.graficos
+            .operacional
+            .metodos_pagamento;
+
+    }
+
+    if (dimension === 'status') {
+
+        data =
+            dashboardData.graficos
+            .operacional
+            .status_entrega;
+
+    }
+
+    const selecionados =
+        [
+            ...document.querySelectorAll(
+                '#dynamicFilters input:checked'
+            )
+        ]
+        .map(
+            item => item.value
+        );
+
+    const labels =
+        Object.keys(data)
+        .filter(
+            item =>
+            selecionados.includes(item)
+        );
+
+    const valores =
+        labels.map(
+            item => data[item]
+        );
+
+    if (comparisonChart) {
+
+        comparisonChart.destroy();
+
+    }
+
+    comparisonChart =
+        new Chart(
+
+            document.getElementById(
+                'comparisonChart'
+            ),
+
+            {
+
+                type:'bar',
+
+                data:{
+
+                    labels,
+
+                    datasets:[{
+
+                        data:valores,
+
+                        backgroundColor:[
+                            '#FFC857',
+                            '#FFB347',
+                            '#FF9A3D',
+                            '#FF7033',
+                            '#E63946',
+                            '#D62828',
+                            '#F4A261',
+                            '#E9C46A',
+                            '#FB8500',
+                            '#FF6B35'
+                        ]
+
+                    }]
+
+                },
+
+                options:{
+
+                    responsive:true,
+
+                    plugins:{
+
+                        legend:{
+                            display:false
+                        }
+
+                    }
+
+                }
+
+            }
+
+        );
+
+    document
+        .querySelectorAll(
+            '#dynamicFilters input'
+        )
+        .forEach(
+
+            checkbox => {
+
+                checkbox.onchange =
+                    updateComparisonChart;
+
+            }
+
+        );
+
+}
+}
+function createComparisonChart(){
+
+    updateComparisonChart();
+
+}
+function setupScrollTransition(){
+
+    window.addEventListener(
+
+        'scroll',
+
+        () => {
+
+            const progress =
+
+                Math.min(
+
+                    window.scrollY /
+
+                    (
+                        window.innerHeight
+                        * 1.4
+                    ),
+
+                    1
+
+                );
+
+            const bg =
+
+                Math.round(
+                    255 - (240 * progress)
+                );
+
+            const text =
+
+                Math.round(
+                    17 + (238 * progress)
+                );
+
+            document.body.style.backgroundColor =
+                `rgb(${bg},${bg},${bg})`;
+
+            document.body.style.color =
+                `rgb(${text},${text},${text})`;
+
+        }
+
+    );
+
+}
+async function init(){
+
+    await loadDashboardData();
+
+    console.log(dashboardData);
+
+    updateKPIs();
+
+    createCharts();
+
+    populateExplorer();
+
+    setupScrollTransition();
+
+}
+
+
+init();
+
+</script>
+
+</body>
+</html>
